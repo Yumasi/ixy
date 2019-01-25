@@ -107,14 +107,14 @@ struct pkt_buf* pkt_buf_alloc(struct mempool* mempool) {
 	pkt_buf_alloc_batch(mempool, &buf, 1);
 
 	/* By default we set the ref count to 1 */
-	buf->ref_count = 1;
+  atomic_store(&buf->ref_count, 1);
 
 	return buf;
 }
 
 void pkt_buf_free(struct pkt_buf* buf) {
-	if (buf->ref_count > 1) {
-		buf->ref_count--;
+	if (atomic_load(&buf->ref_count) > 1) {
+    atomic_fetch_sub(&buf->ref_count, 1);
 	} else {
 		struct mempool* mempool = buf->mempool;
 		mempool->free_stack[mempool->free_stack_top++] = buf->mempool_idx;

@@ -1,6 +1,7 @@
 #ifndef IXY_MEMORY_H
 #define IXY_MEMORY_H
 
+#include <stdatomic.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <unistd.h>
@@ -17,7 +18,7 @@ struct pkt_buf {
 	struct mempool* mempool;
 	uint32_t mempool_idx;
 	uint32_t size;
-	uint8_t ref_count;
+	atomic_uchar ref_count;
 	uint8_t head_room[SIZE_PKT_BUF_HEADROOM];
 	uint8_t data[] __attribute__((aligned(64)));
 };
