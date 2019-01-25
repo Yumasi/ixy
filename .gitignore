@@ -11,6 +11,10 @@ Makefile
 # vscode
 *.idea
 
+# vagrant
+.vagrant
+
 build
 ixy-fwd
 ixy-pktgen
+TAGS
