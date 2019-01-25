@@ -105,6 +105,10 @@ uint32_t pkt_buf_alloc_batch(struct mempool* mempool, struct pkt_buf* bufs[], ui
 struct pkt_buf* pkt_buf_alloc(struct mempool* mempool) {
 	struct pkt_buf* buf = NULL;
 	pkt_buf_alloc_batch(mempool, &buf, 1);
+
+	/* By default we set the ref count to 1 */
+	buf->ref_count = 1;
+
 	return buf;
 }
 
