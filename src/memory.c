@@ -113,7 +113,10 @@ struct pkt_buf* pkt_buf_alloc(struct mempool* mempool) {
 }
 
 void pkt_buf_free(struct pkt_buf* buf) {
-	struct mempool* mempool = buf->mempool;
-	mempool->free_stack[mempool->free_stack_top++] = buf->mempool_idx;
+	if (buf->ref_count > 1) {
+		buf->ref_count--;
+	} else {
+		struct mempool* mempool = buf->mempool;
+		mempool->free_stack[mempool->free_stack_top++] = buf->mempool_idx;
+	}
 }
-
