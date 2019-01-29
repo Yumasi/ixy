@@ -108,14 +108,19 @@ struct pkt_buf* pkt_buf_alloc(struct mempool* mempool) {
 
 	/* By default we set the ref count to 1 */
 	buf->ref_count = 1;
+	pthread_spin_init(&buf->lock, PTHREAD_PROCESS_PRIVATE);
 
 	return buf;
 }
 
 void pkt_buf_free(struct pkt_buf* buf) {
-	if (buf->ref_count > 1) {
-		buf->ref_count--;
-	} else {
+	if (!buf->ref_count) {
+		warn("pkt_buf_free: null ref count. Double free ?");
+		return;
+	}
+	buf->ref_count--;
+
+	if (!buf->ref_count) {
 		struct mempool* mempool = buf->mempool;
 		mempool->free_stack[mempool->free_stack_top++] = buf->mempool_idx;
 	}

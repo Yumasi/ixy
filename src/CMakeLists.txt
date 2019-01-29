@@ -27,4 +27,14 @@ target_include_directories(ixy PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}
   )
 
+target_compile_definitions(ixy PUBLIC
+  "_XOPEN_SOURCE=700"
+  "_DEFAULT_SOURCE"
+  "_POSIX_C_SOURCE"
+  )
+
+target_link_libraries(ixy PRIVATE
+  pthread
+  )
+
 add_subdirectory(app)

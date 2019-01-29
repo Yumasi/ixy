@@ -4,8 +4,6 @@ project(ixy VERSION 1.0.0)
 set(CMAKE_C_STANDARD 11)
 
 add_compile_options(-g -O2 -march=native -fomit-frame-pointer -std=c11
-  -D_XOPEN_SOURCE=700
-  -D_DEFAULT_SOURCE
   -Wall
   -Wextra
   -Wno-unused-parameter

@@ -1,15 +1,16 @@
 #ifndef IXY_MEMORY_H
 #define IXY_MEMORY_H
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <unistd.h>
-#include <stddef.h>
 #include <assert.h>
+#include <pthread.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <unistd.h>
 
 #define HUGE_PAGE_BITS 21
 #define HUGE_PAGE_SIZE (1 << HUGE_PAGE_BITS)
-#define SIZE_PKT_BUF_HEADROOM (39)
+#define SIZE_PKT_BUF_HEADROOM (35)
 
 struct pkt_buf {
 	// physical address to pass a buffer to a nic
@@ -17,10 +18,11 @@ struct pkt_buf {
 	struct mempool* mempool;
 	uint32_t mempool_idx;
 	uint32_t size;
+	pthread_spinlock_t lock;
 	uint8_t ref_count;
 	uint8_t head_room[SIZE_PKT_BUF_HEADROOM];
 	uint8_t data[] __attribute__((aligned(64)));
-};
+} __attribute__((__packed__));
 
 static_assert(sizeof(struct pkt_buf) == 64, "pkt_buf too large");
 static_assert(offsetof(struct pkt_buf, data) == 64, "data at unexpected position");
